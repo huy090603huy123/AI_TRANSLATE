@@ -1,0 +1,10 @@
+streamlit
+cloudscraper
+pandas
+trafilatura
+google-generativeai
+lxml
+gspread
+google-auth
+python-docx
+openpyxl
