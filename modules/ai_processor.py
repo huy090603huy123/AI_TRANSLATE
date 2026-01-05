@@ -76,7 +76,7 @@ def analyze_header(model, text, safety):
     [NAME_END]
     
     [INTRO_START]
-    ...Đoạn giới thiệu ngắn gọn (Viết hoa đúng tên riêng)...
+    ...Đoạn giới thiệu ngắn gọn (Viết hoa đúng tên riêng)... LƯU Ý: Hãy bao quanh tên nhân vật chính ở đầu câu bằng dấu ** (ví dụ: **Jack Gleeson**) để in đậm...
     [INTRO_END]
     
     [INFO_START]

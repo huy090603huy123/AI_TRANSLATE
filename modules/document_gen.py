@@ -13,10 +13,33 @@ def create_final_docx(path, char_name, intro_text, infobox_raw, body_text, origi
     doc.add_paragraph("\n")
 
     # 2. INTRO
+   # ... (Code phần 1. TITLE giữ nguyên) ...
+
+    # 2. INTRO
     if intro_text:
-        p = doc.add_paragraph(intro_text)
+        p = doc.add_paragraph() # Tạo paragraph trống trước
         p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        
+        # Xử lý In Đậm (**) và In Nghiêng (*) cho phần Intro
+        parts = intro_text.split('**')
+        for i, part in enumerate(parts):
+            # i lẻ -> Nằm giữa cặp ** -> In Đậm
+            if i % 2 != 0: 
+                run = p.add_run(part)
+                run.bold = True
+                run.font.color.rgb = RGBColor(0, 0, 0)
+            # i chẵn -> Văn bản thường (hoặc chứa in nghiêng)
+            else:
+                # Xử lý In Nghiêng (*) lồng bên trong
+                sub_parts = part.split('*')
+                for j, sub_part in enumerate(sub_parts):
+                    run = p.add_run(sub_part)
+                    if j % 2 != 0: # j lẻ -> In Nghiêng
+                        run.italic = True
+    
     doc.add_paragraph("\n")
+
+    # ... (Code phần 3. INFOBOX TABLE giữ nguyên) ...
 
     # 3. INFOBOX TABLE
     if infobox_raw:
@@ -36,6 +59,9 @@ def create_final_docx(path, char_name, intro_text, infobox_raw, body_text, origi
         doc.add_paragraph("\n")
 
     # 4. BODY
+    # ... (Các phần code phía trên giữ nguyên) ...
+
+    # 4. BODY
     doc.add_heading('Nội dung chi tiết', level=1)
     for line in body_text.split('\n'):
         line = line.strip()
@@ -46,12 +72,26 @@ def create_final_docx(path, char_name, intro_text, infobox_raw, body_text, origi
         elif line.startswith('# '): doc.add_heading(line[2:], level=1)
         else:
             p = doc.add_paragraph()
+            # Tách phần In đậm (**) trước
             parts = line.split('**')
             for i, part in enumerate(parts):
-                run = p.add_run(part)
+                # Nếu i lẻ -> Nằm giữa cặp ** -> Xử lý In Đậm
                 if i % 2 != 0: 
+                    run = p.add_run(part)
                     run.bold = True
                     run.font.color.rgb = RGBColor(0, 0, 0)
+                
+                # Nếu i chẵn -> Văn bản thường hoặc chứa In Nghiêng (*)
+                else:
+                    # Tách tiếp phần In nghiêng (*) trong đoạn văn bản này
+                    sub_parts = part.split('*')
+                    for j, sub_part in enumerate(sub_parts):
+                        run = p.add_run(sub_part)
+                        # Nếu j lẻ -> Nằm giữa cặp * -> Xử lý In Nghiêng
+                        if j % 2 != 0:
+                            run.italic = True
+
+    # ... (Phần code FOOTER phía dưới giữ nguyên) ...
 
     # 5. FOOTER
     doc.add_paragraph("\n")
